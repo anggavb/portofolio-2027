@@ -1,0 +1,60 @@
+---
+import type { PortfolioDictionary } from '../data/portfolio';
+
+interface Props {
+  dict: PortfolioDictionary;
+}
+
+const { dict } = Astro.props;
+---
+
+<section id="tech-stack" aria-labelledby="skills-heading" class="swiss-section py-12 sm:py-16">
+  <div class="swiss-container">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+      <div class="lg:col-span-3">
+        <p class="m-0 font-mono-tech text-xs font-semibold tracking-wider text-[var(--text-muted)]">
+          {dict.skills.sectionIndex}
+        </p>
+        <h2
+          id="skills-heading"
+          class="m-0 mt-2 text-[clamp(1.5rem,2.5vw,2.15rem)] font-bold leading-[1.2] tracking-[-0.02em] text-[var(--text-primary)]"
+        >
+          {dict.skills.title}
+        </h2>
+        <p class="m-0 mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
+          {dict.skills.subtitle}
+        </p>
+      </div>
+
+      <div class="lg:col-span-9">
+        <div class="flex flex-col divide-y divide-[var(--border-grid)] border-t border-b border-[var(--border-grid)]">
+          {
+            dict.skills.categories.map((cat) => (
+              <article class="grid grid-cols-1 gap-4 py-6 md:grid-cols-12 md:gap-6">
+                <div class="md:col-span-4">
+                  <p class="m-0 font-mono-tech text-xs font-semibold text-[var(--accent-primary)]">
+                    {cat.index}
+                  </p>
+                  <h3 class="m-0 mt-1 text-base font-bold text-[var(--text-primary)]">
+                    {cat.category}
+                  </h3>
+                  <p class="m-0 mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
+                    {cat.focusNote}
+                  </p>
+                </div>
+
+                <div class="md:col-span-8">
+                  <ul class="m-0 flex list-none flex-wrap gap-2 p-0">
+                    {cat.items.map((skill) => (
+                      <li class="swiss-badge !py-1.5 !px-2.5">{skill}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

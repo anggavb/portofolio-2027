@@ -1,0 +1,43 @@
+{
+  "fetchedAt": "2026-11-01T14:10:13.149Z",
+  "profile": {
+    "login": "anggavb",
+    "html_url": "https://github.com/anggavb",
+    "public_repos": 73,
+    "followers": 7
+  },
+  "recentRepos": [
+    {
+      "name": "portofolio-2027",
+      "html_url": "https://github.com/anggavb/portofolio-2027",
+      "description": null,
+      "language": null,
+      "pushed_at": "2026-11-01T13:32:19Z",
+      "stargazers_count": 0
+    },
+    {
+      "name": "agent-skills",
+      "html_url": "https://github.com/anggavb/agent-skills",
+      "description": "My personal agentic ai skills for what i used",
+      "language": "Python",
+      "pushed_at": "2026-10-28T07:38:42Z",
+      "stargazers_count": 0
+    },
+    {
+      "name": "tabunganku",
+      "html_url": "https://github.com/anggavb/tabunganku",
+      "description": null,
+      "language": "Python",
+      "pushed_at": "2026-09-22T09:17:05Z",
+      "stargazers_count": 0
+    },
+    {
+      "name": "yt-comment-priority-fe",
+      "html_url": "https://github.com/anggavb/yt-comment-priority-fe",
+      "description": null,
+      "language": "Svelte",
+      "pushed_at": "2026-09-07T15:35:32Z",
+      "stargazers_count": 0
+    }
+  ]
+}

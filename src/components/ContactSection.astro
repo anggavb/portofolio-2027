@@ -1,0 +1,401 @@
+---
+import { PROFILE_CONSTANTS, type PortfolioDictionary } from '../data/portfolio';
+import { isFormspreeConfigured } from '../lib/contact';
+
+interface Props {
+  dict: PortfolioDictionary;
+}
+
+const { dict } = Astro.props;
+
+const formspreeId = (import.meta.env.PUBLIC_FORMSPREE_FORM_ID ?? '').trim();
+const turnstileSiteKey = (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').trim();
+const optionalPhone = (import.meta.env.PUBLIC_CONTACT_PHONE ?? '').trim();
+const configured = isFormspreeConfigured(formspreeId);
+const formAction = configured ? `https://formspree.io/f/${encodeURIComponent(formspreeId)}` : '#contact';
+---
+
+<section id="contact" aria-labelledby="contact-heading" class="swiss-section py-12 sm:py-16">
+  <div class="swiss-container">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+      <div class="lg:col-span-3">
+        <p class="m-0 font-mono-tech text-xs font-semibold tracking-wider text-[var(--text-muted)]">
+          {dict.contact.sectionIndex}
+        </p>
+        <h2
+          id="contact-heading"
+          class="m-0 mt-2 text-[clamp(1.5rem,2.5vw,2.15rem)] font-bold leading-[1.2] tracking-[-0.02em] text-[var(--text-primary)]"
+        >
+          {dict.contact.title}
+        </h2>
+        <p class="m-0 mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
+          {dict.contact.subtitle}
+        </p>
+      </div>
+
+      <div class="lg:col-span-9">
+        <div class="grid grid-cols-1 gap-6 xl:grid-cols-12">
+          <div class="swiss-card flex flex-col justify-between p-5 sm:p-6 xl:col-span-5">
+            <div>
+              <h3 class="m-0 text-lg font-bold text-[var(--text-primary)]">
+                {dict.contact.directChannelsHeading}
+              </h3>
+              <p class="m-0 mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
+                {dict.contact.directChannelsBody}
+              </p>
+
+              <div class="mt-5 rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-canvas)] p-4">
+                <p class="m-0 font-mono-tech text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                  {dict.contact.emailLabel}
+                </p>
+                <p class="m-0 mt-1 break-all font-mono-tech text-sm font-bold text-[var(--text-primary)]">
+                  {PROFILE_CONSTANTS.email}
+                </p>
+                <div class="mt-3.5 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    data-copy-email={PROFILE_CONSTANTS.email}
+                    data-copied-msg={dict.contact.emailCopiedFeedback}
+                    data-copy-failed-msg={dict.contact.copyFailedFeedback}
+                    class="swiss-btn-primary !text-xs font-mono-tech"
+                  >
+                    {dict.contact.copyEmailButton}
+                  </button>
+                  <a
+                    href={`mailto:${PROFILE_CONSTANTS.email}`}
+                    class="swiss-btn-secondary !text-xs font-mono-tech"
+                  >
+                    {dict.contact.sendMailtoButton}
+                  </a>
+                </div>
+                <p
+                  role="status"
+                  aria-live="polite"
+                  data-copy-email-feedback
+                  class="m-0 mt-2.5 min-h-[1.25rem] font-mono-tech text-xs font-medium text-[var(--accent-status)]"
+                ></p>
+              </div>
+            </div>
+
+            <dl class="m-0 mt-6 flex flex-col gap-3 border-t border-[var(--border-grid)] pt-4">
+              <div class="flex items-center justify-between gap-2">
+                <dt class="font-mono-tech text-xs text-[var(--text-muted)]">
+                  {dict.contact.linkedinLabel}
+                </dt>
+                <dd class="m-0">
+                  <a
+                    href={PROFILE_CONSTANTS.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex min-h-[44px] items-center font-mono-tech text-xs font-semibold text-[var(--accent-primary)] underline underline-offset-4"
+                  >
+                    {PROFILE_CONSTANTS.linkedinHandle} -&gt;
+                  </a>
+                </dd>
+              </div>
+
+              <div class="flex items-center justify-between gap-2 border-t border-[var(--border-grid)] pt-2">
+                <dt class="font-mono-tech text-xs text-[var(--text-muted)]">
+                  {dict.contact.githubLabel}
+                </dt>
+                <dd class="m-0">
+                  <a
+                    href={PROFILE_CONSTANTS.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex min-h-[44px] items-center font-mono-tech text-xs font-semibold text-[var(--accent-primary)] underline underline-offset-4"
+                  >
+                    github.com/anggavb -&gt;
+                  </a>
+                </dd>
+              </div>
+
+              {optionalPhone.length > 0 && (
+                <div class="flex items-center justify-between gap-2 border-t border-[var(--border-grid)] pt-2">
+                  <dt class="font-mono-tech text-xs text-[var(--text-muted)]">
+                    {dict.contact.phoneLabel}
+                  </dt>
+                  <dd class="m-0 font-mono-tech text-xs font-semibold text-[var(--text-primary)]">
+                    {optionalPhone}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+
+          <div class="swiss-card p-5 sm:p-6 xl:col-span-7">
+            <h3 class="m-0 text-lg font-bold text-[var(--text-primary)]">
+              {dict.contact.formHeading}
+            </h3>
+            <p class="m-0 mt-1.5 text-sm leading-relaxed text-[var(--text-secondary)]">
+              {dict.contact.formIntro}
+            </p>
+            <p class="m-0 mt-1 font-mono-tech text-xs text-[var(--text-muted)]">
+              {dict.contact.requiredNote}
+            </p>
+
+            {!configured && (
+              <div
+                role="status"
+                data-form-unconfigured
+                class="mt-4 rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-subtle)] p-4"
+              >
+                <p class="m-0 flex items-center gap-2 font-mono-tech text-xs font-bold uppercase tracking-wide text-[var(--text-primary)]">
+                  <span aria-hidden="true">[INFO]</span>
+                  <span>{dict.contact.unconfiguredTitle}</span>
+                </p>
+                <p class="m-0 mt-1.5 text-xs leading-relaxed text-[var(--text-secondary)]">
+                  {dict.contact.unconfiguredBody}
+                </p>
+              </div>
+            )}
+
+            <form
+              id="portfolio-contact-form"
+              action={formAction}
+              method="POST"
+              novalidate
+              data-contact-form
+              data-formspree-id={formspreeId}
+              data-turnstile-site-key={turnstileSiteKey}
+              data-recipient-email={PROFILE_CONSTANTS.email}
+              data-validation-messages={JSON.stringify(dict.contact.validation)}
+              data-submit-label={dict.contact.submitButton}
+              data-submitting-label={dict.contact.submittingButton}
+              data-cooldown-template={dict.contact.cooldownButtonTemplate}
+              data-success-title={dict.contact.successTitle}
+              data-success-body={dict.contact.successBody}
+              data-validation-summary={dict.contact.validationSummaryError}
+              data-rate-limit-msg={dict.contact.rateLimitError}
+              data-failed-title={dict.contact.deliveryFailedTitle}
+              data-failed-body={dict.contact.deliveryFailedBody}
+              data-draft-copied-msg={dict.contact.draftCopiedFeedback}
+              data-email-copied-msg={dict.contact.emailCopiedFeedback}
+              data-copy-failed-msg={dict.contact.copyFailedFeedback}
+              class="mt-5"
+            >
+              <fieldset class="relative m-0 flex flex-col gap-5 border-0 p-0">
+                <legend class="visually-hidden">{dict.contact.formHeading}</legend>
+
+                <div class="visually-hidden" aria-hidden="true">
+                  <label for="contact-gotcha">{dict.contact.fields.honeypotLabel}</label>
+                  <input
+                    type="text"
+                    id="contact-gotcha"
+                    name="_gotcha"
+                    tabindex="-1"
+                    autocomplete="off"
+                    class="visually-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="contact-name"
+                    class="block text-sm font-semibold text-[var(--text-primary)]"
+                  >
+                    {dict.contact.fields.nameLabel}
+                  </label>
+                  <span
+                    id="contact-name-hint"
+                    class="mt-0.5 mb-1.5 block font-mono-tech text-xs text-[var(--text-muted)]"
+                  >
+                    {dict.contact.fields.nameHint}
+                  </span>
+                  <input
+                    type="text"
+                    id="contact-name"
+                    name="name"
+                    required
+                    minlength="2"
+                    maxlength="100"
+                    autocomplete="name"
+                    placeholder={dict.contact.fields.namePlaceholder}
+                    aria-describedby="contact-name-hint contact-name-error"
+                    class="swiss-input"
+                  />
+                  <p
+                    id="contact-name-error"
+                    data-field-error="name"
+                    hidden
+                    class="m-0 mt-1.5 font-mono-tech text-xs font-semibold text-[var(--state-error)]"
+                  ></p>
+                </div>
+
+                <div>
+                  <label
+                    for="contact-email"
+                    class="block text-sm font-semibold text-[var(--text-primary)]"
+                  >
+                    {dict.contact.fields.emailLabel}
+                  </label>
+                  <span
+                    id="contact-email-hint"
+                    class="mt-0.5 mb-1.5 block font-mono-tech text-xs text-[var(--text-muted)]"
+                  >
+                    {dict.contact.fields.emailHint}
+                  </span>
+                  <input
+                    type="email"
+                    id="contact-email"
+                    name="email"
+                    inputmode="email"
+                    autocomplete="email"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    required
+                    maxlength="254"
+                    placeholder={dict.contact.fields.emailPlaceholder}
+                    aria-describedby="contact-email-hint contact-email-error"
+                    class="swiss-input"
+                  />
+                  <p
+                    id="contact-email-error"
+                    data-field-error="email"
+                    hidden
+                    class="m-0 mt-1.5 font-mono-tech text-xs font-semibold text-[var(--state-error)]"
+                  ></p>
+                </div>
+
+                <div>
+                  <label
+                    for="contact-subject"
+                    class="block text-sm font-semibold text-[var(--text-primary)]"
+                  >
+                    {dict.contact.fields.subjectLabel}
+                  </label>
+                  <span
+                    id="contact-subject-hint"
+                    class="mt-0.5 mb-1.5 block font-mono-tech text-xs text-[var(--text-muted)]"
+                  >
+                    {dict.contact.fields.subjectHint}
+                  </span>
+                  <input
+                    type="text"
+                    id="contact-subject"
+                    name="subject"
+                    required
+                    minlength="3"
+                    maxlength="120"
+                    placeholder={dict.contact.fields.subjectPlaceholder}
+                    aria-describedby="contact-subject-hint contact-subject-error"
+                    class="swiss-input"
+                  />
+                  <p
+                    id="contact-subject-error"
+                    data-field-error="subject"
+                    hidden
+                    class="m-0 mt-1.5 font-mono-tech text-xs font-semibold text-[var(--state-error)]"
+                  ></p>
+                </div>
+
+                <div>
+                  <label
+                    for="contact-message"
+                    class="block text-sm font-semibold text-[var(--text-primary)]"
+                  >
+                    {dict.contact.fields.messageLabel}
+                  </label>
+                  <span
+                    id="contact-message-hint"
+                    class="mt-0.5 mb-1.5 block font-mono-tech text-xs text-[var(--text-muted)]"
+                  >
+                    {dict.contact.fields.messageHint}
+                  </span>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    rows="5"
+                    required
+                    minlength="20"
+                    maxlength="2000"
+                    placeholder={dict.contact.fields.messagePlaceholder}
+                    aria-describedby="contact-message-hint contact-message-error"
+                    class="swiss-input resize-y"
+                  ></textarea>
+                  <p
+                    id="contact-message-error"
+                    data-field-error="message"
+                    hidden
+                    class="m-0 mt-1.5 font-mono-tech text-xs font-semibold text-[var(--state-error)]"
+                  ></p>
+                </div>
+
+                {turnstileSiteKey.length > 0 && (
+                  <div
+                    class="cf-turnstile"
+                    data-sitekey={turnstileSiteKey}
+                    data-turnstile-container
+                  ></div>
+                )}
+
+                <div
+                  data-form-banner
+                  hidden
+                  role="status"
+                  aria-live="polite"
+                  tabindex="-1"
+                  class="rounded-[3px] border border-[var(--border-strong)] p-4"
+                >
+                  <p data-form-banner-title class="m-0 font-mono-tech text-xs font-bold uppercase tracking-wide"></p>
+                  <p data-form-banner-body class="m-0 mt-1 text-sm leading-relaxed"></p>
+
+                  <div data-form-recovery hidden class="mt-3.5 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      data-recovery-copy-email
+                      class="swiss-btn-primary !text-xs font-mono-tech"
+                    >
+                      {dict.contact.copyEmailButton}
+                    </button>
+                    <button
+                      type="button"
+                      data-recovery-copy-draft
+                      class="swiss-btn-secondary !text-xs font-mono-tech"
+                    >
+                      {dict.contact.copyDraftButton}
+                    </button>
+                    <a
+                      href={`mailto:${PROFILE_CONSTANTS.email}`}
+                      data-recovery-mailto
+                      class="swiss-btn-secondary !text-xs font-mono-tech"
+                    >
+                      {dict.contact.openPrefilledMailtoButton}
+                    </a>
+                  </div>
+                  <p
+                    data-recovery-feedback
+                    role="status"
+                    aria-live="polite"
+                    class="m-0 mt-2 font-mono-tech text-xs font-semibold text-[var(--accent-status)]"
+                  ></p>
+                </div>
+
+                <div class="pt-1">
+                  <button
+                    type="submit"
+                    data-contact-submit
+                    disabled={!configured}
+                    class="swiss-btn-primary w-full sm:w-auto font-mono-tech text-sm"
+                  >
+                    {dict.contact.submitButton}
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{turnstileSiteKey.length > 0 && (
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+    is:inline
+  />
+)}

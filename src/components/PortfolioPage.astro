@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from './Header.astro';
+import HeroSection from './HeroSection.astro';
+import ExperienceSection from './ExperienceSection.astro';
+import WorksSection from './WorksSection.astro';
+import LabSection from './LabSection.astro';
+import SkillsSection from './SkillsSection.astro';
+import EducationSection from './EducationSection.astro';
+import ContactSection from './ContactSection.astro';
+import Footer from './Footer.astro';
+import { PORTFOLIO_DICTIONARY, type Locale } from '../data/portfolio';
+import { loadBuildGitHubSnapshot } from '../utils/load-github-snapshot';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = PORTFOLIO_DICTIONARY[locale];
+const snapshot = loadBuildGitHubSnapshot();
+---
+
+<BaseLayout dict={dict}>
+  <Header dict={dict} />
+  <main id="main-content" tabindex="-1">
+    <HeroSection dict={dict} />
+    <ExperienceSection dict={dict} />
+    <WorksSection dict={dict} />
+    <LabSection dict={dict} snapshot={snapshot} />
+    <SkillsSection dict={dict} />
+    <EducationSection dict={dict} />
+    <ContactSection dict={dict} />
+  </main>
+  <Footer dict={dict} />
+  <script>
+    import '../scripts/client-app';
+  </script>
+</BaseLayout>

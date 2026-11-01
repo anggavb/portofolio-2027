@@ -1,0 +1,43 @@
+---
+import { HEAD_THEME_INIT_SCRIPT } from '../lib/theme';
+import '../styles/global.css';
+
+// Root '/' acts exclusively as an entrypoint redirect to '/id/' (or '/en/' if stored on '/').
+// Direct visits to '/id/' or '/en/' never run this redirect.
+const rootRedirectScript = `(function(){var t='/id/';try{if(localStorage.getItem('portfolio-lang')==='en'){t='/en/';}}catch(e){}window.location.replace(t+(window.location.hash||''));})();`;
+---
+
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline set:html={HEAD_THEME_INIT_SCRIPT} />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://anggavb.my.id/id/" />
+    <link rel="alternate" hreflang="id" href="https://anggavb.my.id/id/" />
+    <link rel="alternate" hreflang="en" href="https://anggavb.my.id/en/" />
+    <link rel="alternate" hreflang="x-default" href="https://anggavb.my.id/id/" />
+    <script is:inline set:html={rootRedirectScript} />
+    <meta http-equiv="refresh" content="0;url=/id/" />
+    <title>Angga VB | Fullstack Software Engineer</title>
+  </head>
+  <body>
+    <main class="swiss-container py-16">
+      <h1 class="text-xl font-bold">Angga VB | Fullstack Software Engineer</h1>
+      <p class="mt-3 text-sm text-[var(--text-secondary)]">
+        Mengarahkan ke halaman bahasa utama / Redirecting to primary language edition:
+      </p>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <a href="/id/" class="swiss-btn-primary font-mono-tech text-xs">
+          Bahasa Indonesia (/id/)
+        </a>
+        <a href="/en/" class="swiss-btn-secondary font-mono-tech text-xs">
+          English (/en/)
+        </a>
+      </div>
+    </main>
+  </body>
+</html>

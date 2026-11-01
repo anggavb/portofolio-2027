@@ -1,0 +1,88 @@
+---
+import '@fontsource-variable/plus-jakarta-sans';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/global.css';
+import { HEAD_THEME_INIT_SCRIPT } from '../lib/theme';
+import { PROFILE_CONSTANTS, type PortfolioDictionary } from '../data/portfolio';
+
+interface Props {
+  dict: PortfolioDictionary;
+}
+
+const { dict } = Astro.props;
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: PROFILE_CONSTANTS.fullName,
+  jobTitle: dict.seo.jobTitle,
+  url: dict.canonicalUrl,
+  email: `mailto:${PROFILE_CONSTANTS.email}`,
+  worksFor: {
+    '@type': 'Organization',
+    name: 'PT Bank Rakyat Indonesia (Persero) Tbk',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Jakarta',
+    addressCountry: 'ID',
+  },
+  knowsAbout: dict.seo.knowsAbout,
+  sameAs: [
+    PROFILE_CONSTANTS.githubUrl,
+    PROFILE_CONSTANTS.linkedinUrl,
+    PROFILE_CONSTANTS.siteUrl,
+  ],
+};
+---
+
+<!DOCTYPE html>
+<html lang={dict.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline set:html={HEAD_THEME_INIT_SCRIPT} />
+
+    <title>{dict.seo.title}</title>
+    <meta name="description" content={dict.seo.description} />
+    <meta name="author" content={PROFILE_CONSTANTS.fullName} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="canonical" href={dict.canonicalUrl} />
+    <link rel="alternate" hreflang="id" href="https://anggavb.my.id/id/" />
+    <link rel="alternate" hreflang="en" href="https://anggavb.my.id/en/" />
+    <link rel="alternate" hreflang="x-default" href="https://anggavb.my.id/id/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Angga VB Portfolio" />
+    <meta property="og:locale" content={dict.ogLocale} />
+    <meta property="og:locale:alternate" content={dict.ogLocaleAlternate} />
+    <meta property="og:url" content={dict.canonicalUrl} />
+    <meta property="og:title" content={dict.seo.title} />
+    <meta property="og:description" content={dict.seo.description} />
+    <meta property="og:image" content="https://anggavb.my.id/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={dict.seo.title} />
+    <meta name="twitter:description" content={dict.seo.description} />
+    <meta name="twitter:image" content="https://anggavb.my.id/og-image.png" />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(personJsonLd)}
+    />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">{dict.a11y.skipToContent}</a>
+    <div
+      class="h-[3px] w-full bg-[var(--accent-brand)]"
+      aria-hidden="true"
+    ></div>
+    <slot />
+  </body>
+</html>

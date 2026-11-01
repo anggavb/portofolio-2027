@@ -1,0 +1,306 @@
+---
+import type { PortfolioDictionary } from '../data/portfolio';
+
+interface Props {
+  dict: PortfolioDictionary;
+}
+
+const { dict } = Astro.props;
+
+const enterpriseWorks = dict.works.items.filter((w) => w.group === 'enterprise');
+const fullstackWorks = dict.works.items.filter((w) => w.group === 'fullstack');
+const totalCount = dict.works.items.length;
+const initialCountLabel = dict.works.countTemplate
+  .replace('{shown}', String(totalCount))
+  .replace('{total}', String(totalCount));
+---
+
+<section
+  id="projects"
+  aria-labelledby="projects-heading"
+  class="swiss-section py-12 sm:py-16"
+  data-works-section
+  data-total-count={String(totalCount)}
+  data-count-template={dict.works.countTemplate}
+  data-empty-template={dict.works.emptyStateTitle}
+>
+  <div class="swiss-container">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+      <div class="lg:col-span-3">
+        <p class="m-0 font-mono-tech text-xs font-semibold tracking-wider text-[var(--text-muted)]">
+          {dict.works.sectionIndex}
+        </p>
+        <h2
+          id="projects-heading"
+          class="m-0 mt-2 text-[clamp(1.5rem,2.5vw,2.15rem)] font-bold leading-[1.2] tracking-[-0.02em] text-[var(--text-primary)]"
+        >
+          {dict.works.title}
+        </h2>
+        <p class="m-0 mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
+          {dict.works.subtitle}
+        </p>
+        <p class="m-0 mt-4 rounded-[3px] border border-[var(--border-grid)] bg-[var(--bg-subtle)] p-3 font-mono-tech text-xs leading-relaxed text-[var(--text-muted)]">
+          {dict.works.noLiveDemoPolicyNote}
+        </p>
+      </div>
+
+      <div class="lg:col-span-9">
+        <search class="swiss-card p-4 sm:p-5">
+          <div class="flex flex-col gap-4">
+            <div>
+              <p class="m-0 mb-2.5 font-mono-tech text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                {dict.works.filterLegend}
+              </p>
+              <div class="flex flex-wrap gap-2" role="group" aria-label={dict.works.filterLegend}>
+                {
+                  dict.works.filters.map((filter) => (
+                    <button
+                      type="button"
+                      class="swiss-filter-btn"
+                      data-work-filter={filter.id}
+                      data-filter-label={filter.label}
+                      aria-pressed={filter.id === 'all' ? 'true' : 'false'}
+                    >
+                      {filter.label}
+                    </button>
+                  ))
+                }
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-3 border-t border-[var(--border-grid)] pt-3.5 sm:flex-row sm:items-center sm:justify-between">
+              <div class="flex-1">
+                <label for="works-keyword-filter" class="visually-hidden">
+                  {dict.works.searchLabel}
+                </label>
+                <input
+                  type="search"
+                  id="works-keyword-filter"
+                  data-work-keyword
+                  placeholder={dict.works.searchPlaceholder}
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  class="swiss-input !min-h-[44px] !py-2 !text-sm"
+                />
+              </div>
+              <p
+                role="status"
+                aria-live="polite"
+                data-works-count
+                class="m-0 shrink-0 font-mono-tech text-xs font-medium text-[var(--text-muted)]"
+              >
+                {initialCountLabel}
+              </p>
+            </div>
+          </div>
+        </search>
+
+        <div
+          data-works-empty
+          hidden
+          class="mt-6 swiss-card-interactive p-6 text-center"
+        >
+          <p data-works-empty-msg class="m-0 text-base font-semibold text-[var(--text-primary)]">
+            {dict.works.emptyStateTitle}
+          </p>
+          <div class="mt-4">
+            <button type="button" data-works-reset class="swiss-btn-primary font-mono-tech text-xs">
+              {dict.works.emptyStateReset}
+            </button>
+          </div>
+        </div>
+
+        <div data-works-group="enterprise" class="mt-8">
+          <div class="border-b border-[var(--border-grid)] pb-3">
+            <h3 class="m-0 text-lg font-bold text-[var(--text-primary)]">
+              {dict.works.enterpriseGroupTitle}
+            </h3>
+            <p class="m-0 mt-1 text-sm text-[var(--text-secondary)]">
+              {dict.works.enterpriseGroupSubtitle}
+            </p>
+          </div>
+
+          <div class="mt-5 flex flex-col gap-5">
+            {
+              enterpriseWorks.map((work) => (
+                <article
+                  data-work-card
+                  data-work-id={work.id}
+                  data-work-group="enterprise"
+                  data-work-tags={work.filterTags.join(',')}
+                  data-work-search={`${work.title} ${work.subtitle} ${work.organization} ${work.stack.join(' ')}`.toLowerCase()}
+                  class="swiss-card p-5 sm:p-6"
+                >
+                  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-grid)] pb-3">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="font-mono-tech text-xs font-semibold text-[var(--accent-primary)]">
+                        {work.index}
+                      </span>
+                      <span class="font-mono-tech text-xs text-[var(--text-muted)]">
+                        {work.organization}
+                      </span>
+                      <span class="font-mono-tech text-xs text-[var(--text-muted)]">
+                        // {work.period}
+                      </span>
+                    </div>
+                    <span class="rounded-[2px] border border-[var(--border-grid)] bg-[var(--bg-subtle)] px-2 py-0.5 font-mono-tech text-[0.75rem] text-[var(--text-muted)]">
+                      [{work.provenance}]
+                    </span>
+                  </div>
+
+                  <h4 class="m-0 mt-3.5 text-xl font-bold leading-snug text-[var(--text-primary)]">
+                    {work.title}
+                  </h4>
+                  <p class="m-0 mt-1 font-mono-tech text-xs font-medium text-[var(--text-muted)]">
+                    {work.roleLabel} : {work.subtitle}
+                  </p>
+
+                  <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div class="rounded-[3px] border border-[var(--border-grid)] bg-[var(--bg-canvas)] p-3.5">
+                      <p class="m-0 font-mono-tech text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                        {dict.works.contextHeading}
+                      </p>
+                      <p class="m-0 mt-1.5 text-sm leading-relaxed text-[var(--text-secondary)]">
+                        {work.problemContext}
+                      </p>
+                    </div>
+                    <div class="rounded-[3px] border border-[var(--border-grid)] bg-[var(--bg-canvas)] p-3.5">
+                      <p class="m-0 font-mono-tech text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                        {dict.works.architectureHeading}
+                      </p>
+                      <p class="m-0 mt-1.5 text-sm leading-relaxed text-[var(--text-secondary)]">
+                        {work.architectureSolution}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                    <ul class="m-0 flex list-none flex-wrap gap-1.5 p-0">
+                      {work.stack.map((tech) => (
+                        <li class="swiss-badge">{tech}</li>
+                      ))}
+                    </ul>
+
+                    {work.repos.length > 0 ? (
+                      <div class="flex flex-wrap gap-2">
+                        {work.repos.map((repo) => (
+                          <a
+                            href={repo.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="swiss-btn-secondary !min-h-[44px] !px-3 font-mono-tech !text-xs"
+                          >
+                            <span>{repo.label}</span>
+                            <span class="visually-hidden">{dict.a11y.externalRepoNotice}</span>
+                            <span aria-hidden="true">-&gt;</span>
+                          </a>
+                        ))}
+                      </div>
+                    ) : (
+                      <span class="inline-flex min-h-[36px] shrink-0 items-center rounded-[2px] border border-[var(--border-grid)] bg-[var(--bg-subtle)] px-2.5 py-1 font-mono-tech text-xs text-[var(--text-muted)]">
+                        {dict.works.privateArchitectureBadge}
+                      </span>
+                    )}
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+
+        <div data-works-group="fullstack" class="mt-10">
+          <div class="border-b border-[var(--border-grid)] pb-3">
+            <h3 class="m-0 text-lg font-bold text-[var(--text-primary)]">
+              {dict.works.fullstackGroupTitle}
+            </h3>
+            <p class="m-0 mt-1 text-sm text-[var(--text-secondary)]">
+              {dict.works.fullstackGroupSubtitle}
+            </p>
+          </div>
+
+          <div class="mt-5 flex flex-col gap-5">
+            {
+              fullstackWorks.map((work) => (
+                <article
+                  data-work-card
+                  data-work-id={work.id}
+                  data-work-group="fullstack"
+                  data-work-tags={work.filterTags.join(',')}
+                  data-work-search={`${work.title} ${work.subtitle} ${work.organization} ${work.stack.join(' ')}`.toLowerCase()}
+                  class="swiss-card p-5 sm:p-6"
+                >
+                  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-grid)] pb-3">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="font-mono-tech text-xs font-semibold text-[var(--accent-primary)]">
+                        {work.index}
+                      </span>
+                      <span class="font-mono-tech text-xs text-[var(--text-muted)]">
+                        {work.organization}
+                      </span>
+                      <span class="font-mono-tech text-xs text-[var(--text-muted)]">
+                        // {work.period}
+                      </span>
+                    </div>
+                    <span class="rounded-[2px] border border-[var(--border-grid)] bg-[var(--bg-subtle)] px-2 py-0.5 font-mono-tech text-[0.75rem] text-[var(--text-muted)]">
+                      [{work.provenance}]
+                    </span>
+                  </div>
+
+                  <h4 class="m-0 mt-3.5 text-xl font-bold leading-snug text-[var(--text-primary)]">
+                    {work.title}
+                  </h4>
+                  <p class="m-0 mt-1 font-mono-tech text-xs font-medium text-[var(--text-muted)]">
+                    {work.roleLabel} : {work.subtitle}
+                  </p>
+
+                  <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div class="rounded-[3px] border border-[var(--border-grid)] bg-[var(--bg-canvas)] p-3.5">
+                      <p class="m-0 font-mono-tech text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                        {dict.works.contextHeading}
+                      </p>
+                      <p class="m-0 mt-1.5 text-sm leading-relaxed text-[var(--text-secondary)]">
+                        {work.problemContext}
+                      </p>
+                    </div>
+                    <div class="rounded-[3px] border border-[var(--border-grid)] bg-[var(--bg-canvas)] p-3.5">
+                      <p class="m-0 font-mono-tech text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                        {dict.works.architectureHeading}
+                      </p>
+                      <p class="m-0 mt-1.5 text-sm leading-relaxed text-[var(--text-secondary)]">
+                        {work.architectureSolution}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 flex flex-col gap-3 pt-2">
+                    <ul class="m-0 flex list-none flex-wrap gap-1.5 p-0">
+                      {work.stack.map((tech) => (
+                        <li class="swiss-badge">{tech}</li>
+                      ))}
+                    </ul>
+
+                    <div class="flex flex-wrap gap-2 pt-1">
+                      {work.repos.map((repo) => (
+                        <a
+                          href={repo.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="swiss-btn-secondary !min-h-[44px] !px-3.5 font-mono-tech !text-xs"
+                        >
+                          <span>{repo.label}</span>
+                          <span class="visually-hidden">{dict.a11y.externalRepoNotice}</span>
+                          <span aria-hidden="true">-&gt;</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

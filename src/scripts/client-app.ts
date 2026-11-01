@@ -729,7 +729,7 @@ function initContactForm(): void {
         tone: 'error',
         title: form.dataset.validationSummary || 'Validation error',
         body: outcome.summaryMessage || form.dataset.validationSummary || '',
-        showRecovery: false,
+        showRecovery: true,
       });
       firstInvalidField?.focus();
       return;
